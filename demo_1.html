@@ -1,0 +1,29 @@
+<div class="col-md-12">
+
+
+	<h2>Select an image file:</h2>
+	<div class="row">
+		<div class="col-md-6">
+			<h3>Original</h3>
+			<div class="cropArea">
+				<img-crop image="myImage"
+						  area-min-size="100"
+						  area-type="square"
+						  result-image-quality="0"
+						  result-image-format="image/jpeg"
+						  result-image="myCroppedImage"></img-crop>
+
+				<input type="file" id="fileInput" />
+			</div>
+		</div>
+		<div class="col-md-6">
+			<h3>Cropped Image:</h3>
+			<div>
+				<img ng-src="{{myCroppedImage}}" />
+			</div>
+		</div>
+	</div>
+	<div class="jumbotron">
+		<pre>{{myCroppedImage}}</pre>
+	</div>
+</div>
