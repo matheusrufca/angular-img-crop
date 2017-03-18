@@ -1,6 +1,4 @@
-﻿
-
-angular.module('demo1', ['ngImgCrop', 'ngImageCompress'])
+﻿angular.module('demo1', ['ngImgCrop', 'ngImageCompress'])
 	.controller('ngImgController', function ($scope) {
 		$scope.myImage = '';
 		$scope.myCroppedImage = '';
@@ -21,6 +19,37 @@ angular.module('demo1', ['ngImgCrop', 'ngImageCompress'])
 
 
 angular.module('demo2', ['angular-img-cropper', 'ngImageCompress'])
+	.directive('compressImg', function ($parse) {
+		return {
+			restrict: 'EA',
+			//require: ['imageSrc', 'imageQuality', 'imageOutput'],
+			link: function (scope, element, attrs) {
+				function compress() {
+					var result, imageSrc, imgElement, quality;
+
+					if (!attrs.imageSrc) { return; }
+
+
+					imageSrc = $parse(attrs.imageSrc)(scope);
+					quality = attrs.imageQuality || 8;
+
+					imgElement = angular.element('<img />')
+						.attr('src', imageSrc);
+
+					result = window.compressImage(imgElement[0], quality);
+					scope[attrs.imageOutput] = result;
+					element.attr('src', result);
+				};
+
+				scope.$watch(attrs.imageSrc, function (newValue, oldValue) {
+					if (newValue == oldValue) {
+						return;
+					}
+					compress();
+				});
+			}
+		};
+	})
 	.controller("angularImgController", ['$scope', function ($scope) {
 		$scope.cropper = {};
 		$scope.cropper.sourceImage = null;
@@ -37,12 +66,12 @@ angular.module("app", ["ngRoute", 'demo1', 'demo2'])
     .config(function ($routeProvider) {
     	$routeProvider
             .when('/demo1', {
-            	templateUrl: 'demo_1.html',
-            	controller: 'ngImgController'
-            })
-            .when('/demo2', {
             	templateUrl: 'demo_2.html',
             	controller: 'angularImgController'
+            })
+            .when('/demo2', {
+            	templateUrl: 'demo_1.html',
+            	controller: 'ngImgController'
             })
             .otherwise({ redirectTo: '/demo1' });
     })
@@ -67,3 +96,31 @@ angular.module("app", ["ngRoute", 'demo1', 'demo2'])
     		}
     	};
     });
+
+
+
+
+
+
+
+
+/**
+* Receives an Image Object (can be JPG OR PNG) and returns a new Image Object compressed
+* @param {Image} source_img_obj The source Image Object
+* @param {Integer} quality The output quality of Image Object
+* @param {String} output format. Possible values are jpg and png
+* @return {Image} result_image_obj The compressed Image Object
+*/
+window.compressImage = function (sourceImgElement, quality, outputFormat) {
+	var output, canvas, canvasContext, mimeType;
+
+	mimeType = outputFormat || "image/png";
+
+	var canvas = document.createElement('canvas');
+	canvas.width = sourceImgElement.naturalWidth;
+	canvas.height = sourceImgElement.naturalHeight;
+	canvasContext = canvas.getContext("2d").drawImage(sourceImgElement, 0, 0);
+	output = canvas.toDataURL(mimeType, quality / 100);
+
+	return output;
+};
