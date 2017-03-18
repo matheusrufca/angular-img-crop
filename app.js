@@ -22,14 +22,14 @@ angular.module('demo1', ['ngImgCrop', 'ngImageCompress'])
 
 angular.module('demo2', ['angular-img-cropper', 'ngImageCompress'])
 	.controller("angularImgController", ['$scope', function ($scope) {
-	$scope.cropper = {};
-	$scope.cropper.sourceImage = null;
-	$scope.cropper.croppedImage = null;
-	$scope.bounds = {};
-	$scope.bounds.left = 0;
-	$scope.bounds.right = 0;
-	$scope.bounds.top = 0;
-	$scope.bounds.bottom = 0;
+		$scope.cropper = {};
+		$scope.cropper.sourceImage = null;
+		$scope.cropper.croppedImage = null;
+		$scope.bounds = {};
+		$scope.bounds.left = 0;
+		$scope.bounds.right = 0;
+		$scope.bounds.top = 0;
+		$scope.bounds.bottom = 0;
 	}]);
 
 
